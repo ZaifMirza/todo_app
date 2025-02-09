@@ -1,3 +1,40 @@
+type TaskId = nat64;
+
+type Task = record {
+  id: TaskId;
+  title: text;
+  completed: bool;
+  important: bool;
+  created_at: nat64;
+  due_date: nat64;
+  owner: principal;
+};
+
+type CreateTaskPayload = record {
+  title: text;
+  important: bool;
+  due_date: nat64;
+};
+
+type RegisterRequest = record {
+  username: text;
+  password: text;
+};
+
+type LoginRequest = record {
+  username: text;
+  password: text;
+};
+
 service : {
-    "greet": (text) -> (text) query;
-}
+  register: (RegisterRequest) -> (variant { Ok: null; Err: text });
+  login: (LoginRequest) -> (variant { Ok: null; Err: text });
+  logout: () -> (variant { Ok: null; Err: text });
+
+  create_task: (CreateTaskPayload) -> (variant { Ok: TaskId; Err: text });
+  get_my_tasks: () -> (variant { Ok: vec Task; Err: text }) query;
+  toggle_task_status: (text) -> (variant { Ok: null; Err: text });
+  toggle_task_importance: (text) -> (variant { Ok: null; Err: text });
+  delete_task: (text) -> (variant { Ok: null; Err: text });
+  get_completed_tasks: () -> (variant { Ok: vec Task; Err: text }) query;
+};
